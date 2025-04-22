@@ -1,0 +1,168 @@
+include:
+    - project: 'osp/tech-practices/qa/qmo/boiler/core-pipeline'
+      file: 'shared/.gitlab-ci.stages.yml'
+      ref: 'v1.0.4-alpha'
+    - project: 'osp/tech-practices/qa/qmo/boiler/core-pipeline'
+      file: 'node/.gitlab-ci.sonar.yml'
+    - project: 'osp/tech-practices/qa/qmo/boiler/core-pipeline'
+      file: 'node/.gitlab-ci.lint.yml'
+    - project: 'osp/tech-practices/qa/qmo/boiler/core-pipeline'
+      file: 'node/.gitlab-ci.playwright.yml'
+      ref: 'v1.0.2-beta'
+
+variables:
+    ENV:
+        value: dev
+        options:
+            - 'dev'
+            - 'dev2'
+            - 'dev4'
+            - 'stng'
+            - 'sit'
+            - 'pprd'
+            - 'prod'
+        description: 'Environment short name.'
+    TAG:
+        value: '@smoke'
+        description: 'Tag used to group test cases. Possible values: any string, when empty string passed - all tests would be executed'
+    PARALLEL:
+        value: 'true'
+        options:
+            - 'true'
+            - 'false'
+        description: 'Switcher between parallel and sequential execution.'
+    MENTION_IN_TEAMS:
+        value: '"oleksiy.chubey@tui.com","ievgen.gladkyi@tui.co.uk","reena.basana@tui.be","nazneen.khazi@tui.co.uk","adelina.barabas@tui.com","shanker.rao1@tui.co.uk","Anthony.Conlon@tui.co.uk"'
+        description: 'Comma-separated list of emails that should be mentioned in case of Test Failure Teams report would be sent'
+    AGENT_TYPE:
+        value: 3rdparty
+        options:
+            - '3rdparty'
+            - 'inhouse'
+        description: 'Indication of b2b authentication method/resource availability.'
+    COUNTRY:
+        value: be
+        options:
+            - 'be'
+            - 'nl'
+            - 'ma'
+            - 'fr'
+            - 'vip'
+        description: 'Region of the application under test.'
+    IS_PACKAGE:
+        value: 'true'
+        options:
+            - 'true'
+            - 'false'
+        description: 'Switcher between Flight only (false) and Package (true).'
+    PUBLISH_TO_XRAY:
+        value: 'true'
+        options:
+            - 'true'
+            - 'false'
+        description: 'Switcher to enable (true) or disable (false) publish of regression results to Xray.'
+
+.playwright_test_template:
+    stage: test
+    extends: .playwright_tests
+    script:
+        - >
+            if [[ -z "$TAG" ]]; then 
+                npm run test
+            else 
+                npm run test -- --grep $TAG
+            fi
+    timeout: 1 hour
+    artifacts:
+        paths:
+            - ./playwright-report/
+            - ./junit-report/
+        reports:
+            junit: ./junit-report/*xray-report.xml
+        when: always
+        expire_in: 1 days
+
+validation:
+    stage: test
+    extends: .playwright_test_template
+    script:
+        - git fetch origin main:main
+        - npm run validate
+    parallel:
+        matrix:
+            - COUNTRY: ['nl', 'be', 'vip']
+              AGENT_TYPE: ['3rdparty', 'inhouse']
+    rules:
+        - if: '$COUNTRY == "vip" && $AGENT_TYPE == "inhouse"'
+          when: never
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+          when: manual
+    allow_failure: true
+
+sequential_test:
+    stage: test
+    extends: .playwright_test_template
+    rules:
+        - if: '$PARALLEL == "false" && ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web")'
+          when: always
+
+parallel_smoke:
+    stage: test
+    extends: .playwright_test_template
+    parallel:
+        matrix:
+            - COUNTRY: ['nl', 'be', 'vip']
+              AGENT_TYPE: ['3rdparty', 'inhouse']
+    rules:
+        - if: '$COUNTRY == "vip" && $AGENT_TYPE == "inhouse"'
+          when: never
+        - if: '$TAG == "@smoke" && $PARALLEL == "true" && ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web")'
+          when: always
+
+parallel_regression:
+    stage: test
+    extends: .playwright_test_template
+    script: npm run test -- --grep $TAG --grep $REGRESSION_PART
+    parallel:
+        matrix:
+            - COUNTRY: ['nl', 'be', 'vip']
+              AGENT_TYPE: ['3rdparty', 'inhouse']
+              REGRESSION_PART: ['@stable', '@unstable']
+    rules:
+        - if: '$COUNTRY == "vip" && $AGENT_TYPE == "inhouse"'
+          when: never
+        - if: '$TAG == "@regression" && $PARALLEL == "true" && ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web")'
+          when: always
+    after_script:
+        - if [ "$PUBLISH_TO_XRAY" = "true" ]; then npm run xray-report; fi
+
+teams_reporting:
+    stage: report
+    image: 'node:20'
+    dependencies:
+        - parallel_smoke
+        - parallel_regression
+    script:
+        - npm i
+        - npm run teams-report
+    rules:
+        - if: '$PARALLEL == "true" && ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web")'
+          when: manual
+    artifacts:
+        paths:
+            - ./junit-report/
+        expire_in: 2 days
+
+codereview:
+    stage: review
+    image: 'node:20'
+    before_script:
+        - echo "@trips:registry=https://source.tui/api/v4/projects/56868/packages/npm/">>.npmrc
+        - echo "//source.tui/api/v4/projects/56868/packages/npm/:_authToken=${GITLAB_TOKEN}">>.npmrc
+        - npm i @trips/gitlab-mr-agent@latest
+    script:
+        - node node_modules/@trips/gitlab-mr-agent/index.js
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+          when: always
+    allow_failure: true

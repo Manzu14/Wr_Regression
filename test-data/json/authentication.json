@@ -1,0 +1,28 @@
+{
+    "3rdparty": {
+        "username": {
+            "be": "605502",
+            "nl": "1653",
+            "ma": "981735",
+            "vip": "605502"
+        },
+        "password": "Retail@1234",
+        "agentRef": "AAA"
+    },
+    "inhouse": {
+        "username": "auto.test2@tui.co.uk",
+        "password": "Tuitravel11.",
+        "userid": "auto test2",
+        "switchagentdata": {
+            "be": "118570",
+            "nl": "2855"
+        },
+        "customerservicecenterid": {
+            "be": "118501",
+            "nl": "6962"
+        },
+        "seodbswitchagentdata": {
+            "be": "118504"
+        }
+    }
+}

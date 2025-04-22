@@ -1,0 +1,10 @@
+{
+    "visa": {
+        "cardNumber": "4016000000000095",
+        "cardHolderName": "Ronald",
+        "cardExpiryMonth": "12",
+        "cardExpirYear": "24",
+        "cvcCode": "349",
+        "email": "Ronald123@gmail.com"
+    }
+}

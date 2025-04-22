@@ -1,0 +1,72 @@
+{
+    "name": "core-pw",
+    "version": "1.0.0",
+    "description": "Initial Playwright Project using Javascript",
+    "main": "index.js",
+    "scripts": {
+        "validate": "npx playwright test --only-changed=main",
+        "test": "npx playwright test",
+        "3rd:be": "npm run test",
+        "in:be": "cross-env AGENT_TYPE=inhouse npm run test",
+        "3rd:nl": "cross-env COUNTRY=nl npm run 3rd:be",
+        "3rd:ma": "cross-env COUNTRY=ma npm run 3rd:be",
+        "in:nl": "cross-env COUNTRY=nl npm run in:be",
+        "in:ma": "cross-env COUNTRY=ma npm run in:be",
+        "lint-staged": "lint-staged",
+        "eslint": "eslint --config eslint.config.mjs",
+        "eslint:fix": "eslint --config eslint.config.mjs --fix",
+        "format": "prettier --config .prettierrc.js --ignore-path .gitignore --write .",
+        "teams-report": "npx testbeats@latest publish -c utils/reporters/teams.js",
+        "xray-report": "node utils/reporters/xray.js"
+    },
+    "keywords": [],
+    "author": "QMO",
+    "license": "TUI",
+    "devDependencies": {
+        "@axe-core/playwright": "4.10.1",
+        "@eslint/compat": "1.2.3",
+        "@eslint/eslintrc": "3.2.0",
+        "@eslint/js": "9.15.0",
+        "@faker-js/faker": "9.2.0",
+        "@playwright/test": "1.51.0",
+        "@stylistic/eslint-plugin": "2.11.0",
+        "@types/node": "22.10.1",
+        "axe-core": "4.10.2",
+        "axios": "1.8.3",
+        "cross-env": "7.0.3",
+        "dayjs": "1.11.13",
+        "dotenv": "16.4.5",
+        "eslint": "9.15.0",
+        "eslint-config-prettier": "9.1.0",
+        "eslint-plugin-ban": "1.6.0",
+        "eslint-plugin-chai-friendly": "1.0.1",
+        "eslint-plugin-import": "2.31.0",
+        "eslint-plugin-playwright": "2.1.0",
+        "eslint-plugin-prettier": "5.2.1",
+        "eslint-plugin-sort-requires-by-path": "1.0.2",
+        "form-data": "4.0.1",
+        "globals": "15.12.0",
+        "husky": "9.1.7",
+        "jsonpath": "1.1.1",
+        "lint-staged": "15.2.10",
+        "pino": "9.6.0",
+        "pino-pretty": "13.0.0",
+        "prettier": "3.4.1",
+        "promise": "8.3.0",
+        "validator": "13.12.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.*": [
+            "npm run eslint:fix",
+            "npm run format"
+        ]
+    },
+    "dependencies": {
+        "core-pw": "file:"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["dev-exp/onesource/renovate-configs/global", "mergeConfidence:all-badges"],
+    "labels": ["renovate", "dependency-update"],
+    "dependencyDashboard": true,
+    "packageRules": [
+        {
+            "groupName": "Monday Update Check",
+            "description": "Check for library updates every Monday",
+            "matchBaseBranches": ["main"],
+            "minimumReleaseAge": "7 days",
+            "matchUpdateTypes": ["minor", "patch"],
+            "schedule": ["every weekday on Monday after 6:00 before 9:00"]
+        }
+    ]
+}

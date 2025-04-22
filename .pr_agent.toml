@@ -1,0 +1,17 @@
+[pr_reviewer] # /review #
+require_score_review=true 
+require_tests_review=true
+require_estimate_effort_to_review=false 
+require_can_be_split_review=true 
+require_security_review=false 
+require_ticket_analysis_review=false 
+persistent_comment=false
+extra_instructions='if `Web-First Assertion` rule need to be suggested, use web icon for it'
+final_update_message=false 
+enable_review_labels_security=false 
+enable_review_labels_effort=false 
+require_all_thresholds_for_incremental_review=true 
+minimal_commits_for_incremental_review=1
+minimal_minutes_for_incremental_review=10
+enable_intro_text=false 
+enable_help_text=true
