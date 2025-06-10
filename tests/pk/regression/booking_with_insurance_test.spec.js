@@ -3,7 +3,7 @@ const { BookSummaryDetailsPage } = require('../../../pages/package/BookSummaryDe
 const { PackageInsurance } = require('../../../pages/package/components/insurance/package_insurance');
 const { test, expect } = require('../../fixures/test');
 
-test.describe('[B2B]-[PKG]: validation able to complete package booking with Insurance', () => {
+test.describe('@mahesh [B2B]-[PKG]: validation able to complete package booking with Insurance', () => {
     test(
         '[B2B][PKG]: Verify ability to complete booking with insurance',
         {
