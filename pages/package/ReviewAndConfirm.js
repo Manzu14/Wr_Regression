@@ -2,7 +2,7 @@ export class ReviewAndConfirm {
     constructor(page) {
         this.page = page;
         this.confirmChanges = this.page.locator('.ActionBtns__getSearchButtonConfirm');
-        this.reviewAndConfirm - this.page.locator('.UI__reviewAndConfirmValidation');
+        this.reviewAndConfirm = this.page.locator('.UI__reviewAndConfirmValidation');
     }
 
     async reviewandconfirmButton() {

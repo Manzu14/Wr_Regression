@@ -10,7 +10,7 @@ export class PaymentOptionsPage {
         this.amountTobePaidInputTextBox = page.locator('//input[@name="paymentAmt"]');
         this.addPaymentButton = page.locator('.UI__addPayment  button');
         this.continueButton = page.locator('.UI__continue button');
-        this.skipPayment = page.locator('.UI__skipPaymentsWrapper');
+        this.skipPayment = page.locator('#paymentOptionsbutton__component .UI__skipPaymentsWrapper');
         this.displayedTotalPrice = page.locator('#paymentForm .DepositComponentOption__depositPrice');
         this.textPaymentTransfer = page.locator(
             '#paymentForm > div.UI__paymentType > ul > li:nth-child(2) > span > label > span.inputs__text.inputs__alignmiddle > span',
@@ -57,9 +57,15 @@ export class PaymentOptionsPage {
     }
 
     async clickSkipPaymentLink() {
-        await this.skipPayment.waitFor({ state: 'visible', timeout: 60_000 });
-        await this.skipPayment.click();
+        await expect(this.skipPayment).toBeVisible({ timeout: 90_000 });
+    
+        // Handle navigation triggered by click
+        await Promise.all([
+            this.page.waitForURL(/managepaymentconfirm/, { timeout: 90_000 }),
+            this.skipPayment.click()
+        ]);
     }
+    
 
     async enterPaymentDetails() {
         await expect(this.totalAmountSummaryInfo).toBeVisible({ timeout: 90_000 });
@@ -72,7 +78,7 @@ export class PaymentOptionsPage {
     async enterPayInFullDetails(payerName = 'MrAllen') {
         await expect(this.totalAmountSummaryInfo).toBeVisible({ timeout: 90_000 });
         if (isInhouse()) {
-            await expect(this.selectPayAllOption).toBeVisible({ timeout: 60_0000 });
+            await expect(this.selectPayAllOption).toBeVisible({ timeout: 60_000 });
             await this.selectPayAllOption.click();
             const fullAmountToBePaid = await this.getFullAmountToBePaid();
             await this.payerNameInputTextBox.fill(payerName);
