@@ -1,9 +1,20 @@
+# Node.js dependencies
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
+
+# Test results and reports
+test-results/
+playwright-report/
+
+# Logs
+*.log
+
+# Environment config
+.env
+
+# Editor settings (optional)
+.vscode/
 .idea/
-/storage/
-junit-report/
-.npmrc
+
+# System files (optional)
+.DS_Store
+Thumbs.db
