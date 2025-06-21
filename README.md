@@ -1,0 +1,2 @@
+# wr_automation
+smoketest
