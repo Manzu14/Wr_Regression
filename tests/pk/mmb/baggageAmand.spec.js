@@ -1,11 +1,12 @@
-const { HomePage } = require('../../../pages/HomePage');
-const { BaggageUpgradePage } = require('../../../pages/package/BaggageUpgradePage');
-const { YourBookingComponents } = require('../../../pages/package/components/mmb/Yourbookingcomponents');
-const { ManageBookingPage } = require('../../../pages/package/ManageBookingPage');
-const { ReviewAndConfirm } = require('../../../pages/package/ReviewAndConfirm');
+import { HomePage } from '../../../pages/HomePage';
+import { BaggageUpgradePage } from '../../../pages/package/BaggageUpgradePage';
+import { YourBookingComponents } from '../../../pages/package/components/mmb/Yourbookingcomponents';
+import { ManageBookingPage } from '../../../pages/package/ManageBookingPage';
+import { ReviewAndConfirm } from '../../../pages/package/ReviewAndConfirm';
 import { ManagePaymentConfirm } from '../../../pages/package/ManagePaymentConfirm';
 import { PaymentOptionsPage } from '../../../pages/package/PaymentOptionsPage';
 import { expect, test } from '../../fixures/test';
+import { testData } from './testData.js';
 
 test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
     test(
@@ -17,29 +18,26 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
         async ({ page }) => {
             const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
             const manageBookingPage = new ManageBookingPage(page);
-            await manageBookingPage.enterBookingReferenceNumber('100005952007');
-            expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+            await manageBookingPage.enterBookingReferenceNumber(testData.baggage);
+            await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
             await manageBookingPage.clickLoginReservationButton();
+
             const baggageUpgradePage = new BaggageUpgradePage(page);
-            expect(await baggageUpgradePage.baggageComponent()).toBe(true, 'Baggage Component is not visible');
+            await expect(await baggageUpgradePage.baggageComponent()).toBe(true, 'Baggage Component is not visible');
             await baggageUpgradePage.upgradeBaggage();
-            
-            await baggageUpgradePage.selectBaggageOptions();
-            expect(await baggageUpgradePage.selectBaggageOptions()).toBe(true, 'Baggage options are not visible');
+            await expect(await baggageUpgradePage.selectBaggageOptions()).toBe(true, 'Baggage options are not visible');
             await baggageUpgradePage.saveButton();
-            const yourBookingComponents = new YourBookingComponents(page);                   
+
+            const yourBookingComponents = new YourBookingComponents(page);
             await yourBookingComponents.summaryButton();
             const reviewandconfirm = new ReviewAndConfirm(page);
-            expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
-            await (reviewandconfirm.confirmChanges).click();
-            const paymentOptions = new PaymentOptionsPage(page);
-            //await (paymentOptions.skipPayment).toBeVisible({ timeout: 60_000 });
+            await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
+            await reviewandconfirm.confirmChanges.click();
+           const paymentOptions = new PaymentOptionsPage(page);
             await paymentOptions.clickSkipPaymentLink(); // 
             const managePaymentConfirm = new ManagePaymentConfirm(page);
             await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
             await expect(managePaymentConfirm.thankYouMessage).toBeVisible();
-
-            
         },
     );
 });
