@@ -6,7 +6,8 @@
     "scripts": {
         "validate": "npx playwright test --only-changed=main",
         "test": "npx playwright test",
-        "sample": "npx playwright test --grep @mahesh",
+        "mcp": "playwright mcp",
+        "sample": "npx playwright test --grep @manzu",
         "3rd:be": "npm run test",
         "in:be": "cross-env AGENT_TYPE=inhouse npm run test",
         "3rd:nl": "cross-env COUNTRY=nl npm run 3rd:be",

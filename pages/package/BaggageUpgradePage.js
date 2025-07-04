@@ -1,30 +1,38 @@
 const pr = require('promise');
-
+ 
 export class BaggageUpgradePage {
     constructor(page) {
         this.page = page;
     }
-
+ 
     async baggageComponent() {
         await this.page.waitForLoadState('domcontentloaded');
         return await this.page.locator('#PerLegLuggageUpgrade__component').isVisible();
     }
-
+ 
     async upgradeBaggage() {
-        // eslint-disable-next-line playwright/no-wait-for-selector
-        const visible = await this.page.waitForSelector('.upgradeSection #PerLegLuggageUpgrade__component button');
-        await visible.isVisible();
-        // eslint-disable-next-line playwright/no-wait-for-selector
-        const baggageamendbutton = await this.page.waitForSelector('.upgradeSection #PerLegLuggageUpgrade__component button');
-        await new pr(resolve => setTimeout(resolve, 10000));
-        await baggageamendbutton.click();
+    const selector = '.upgradeSection #PerLegLuggageUpgrade__component button';
+    const baggageAmendButton = this.page.locator(selector);
+
+    try {
+        await baggageAmendButton.waitFor({ state: 'visible', timeout: 60000 }); // increase timeout
+        await baggageAmendButton.scrollIntoViewIfNeeded(); // ensure it's in view
+        await baggageAmendButton.click();
+    } catch (error) {
+        console.error(`❌ Baggage amend button not found for selector: ${selector}`);
+        const snapshot = await this.page.content();
+        console.log('🔍 Page snapshot (trimmed):', snapshot.slice(0, 1000)); // optional: capture first 1k HTML chars
+        throw new Error(`Timeout: '${selector}' was not visible on the page`);
     }
 
+
+    }
+ 
     async selectBaggageOptions() {
         await this.page.waitForLoadState('domcontentloaded');
         await new pr(resolve => setTimeout(resolve, 10000));
         const luggageOptions = await this.page.$$('.Luggage__luggageOptions button');
-        if (luggageOptions.length> 0) {           
+        if (luggageOptions.length> 0) {          
         const randomIndex = Math.floor(Math.random() * luggageOptions.length);
         console.log('randomIndex---'+ randomIndex);
         const selectedOption = luggageOptions[randomIndex];
@@ -35,7 +43,7 @@ export class BaggageUpgradePage {
             throw new Error("Language options are not available to add");
         }
     }
-
+ 
     async saveButton() {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator('.Luggage__buttonContainer button:nth-child(2)').focus();

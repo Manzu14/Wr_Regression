@@ -1,0 +1,48 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="88.90771299999999">
+<testsuite name="mmb\dummyAmand.spec.js" timestamp="2025-06-09T10:42:44.438Z" hostname="chromium" tests="1" failures="1" skipped="0" time="77.052" errors="0">
+<testcase name="[B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the baggage amendment, navigate to the review and confirmation page, and proceed to the payment options" classname="mmb\dummyAmand.spec.js" time="77.052">
+<properties>
+<property name="test_key" value="B2B-3379">
+</property>
+<property name="agent" value="inhouse">
+</property>
+<property name="country" value="nl">
+</property>
+<property name="env" value="stng">
+</property>
+<property name="jobId" value="">
+</property>
+<property name="tag" value="">
+</property>
+</properties>
+<failure message="dummyAmand.spec.js:11:9 [B2B][mmb]: Verify the baggage amendment, navigate to the review and confirmation page, and proceed to the payment options" type="FAILURE">
+<![CDATA[  [chromium] › mmb\dummyAmand.spec.js:11:9 › [B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the baggage amendment, navigate to the review and confirmation page, and proceed to the payment options @regression @be @nl @inhouse @3rdparty 
+
+    ReferenceError: SeatUpgradePage is not defined
+
+      28 |             //  expect(await baggageUpgradePage.selectBaggageOptions()).toBe(true, 'Baggage options are not visible');
+      29 |             //  await baggageUpgradePage.saveButton();
+    > 30 |             const seatUpgradePage = new SeatUpgradePage(page);
+         |                                     ^
+      31 |
+      32 |             const isSeatComponentVisible = await seatUpgradePage.seatComponent();
+      33 |             expect(isSeatComponentVisible).toBe(true, 'Seat component is not visible');
+        at C:\Users\Administrator\Downloads\jyothi\jyothi\playwright_automation_stng\tests\pk\mmb\dummyAmand.spec.js:30:37
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\mmb-dummyAmand--B2B---mmb--e2c11-ceed-to-the-payment-options-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\mmb-dummyAmand--B2B---mmb--e2c11-ceed-to-the-payment-options-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\mmb-dummyAmand--B2B---mmb--e2c11-ceed-to-the-payment-options-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

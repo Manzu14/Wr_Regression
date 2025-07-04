@@ -1,0 +1,51 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="58.825665">
+<testsuite name="regression\mmb_booking_search_test.spec.js" timestamp="2025-05-12T10:49:43.089Z" hostname="chromium" tests="1" failures="1" skipped="0" time="28.319" errors="0">
+<testcase name="[B2B]-[mmb]: validation booking search with date › [B2B][mmb]: Verify booking search with date" classname="regression\mmb_booking_search_test.spec.js" time="28.319">
+<properties>
+<property name="test_key" value="B2B-3379">
+</property>
+<property name="agent" value="3rdparty">
+</property>
+<property name="country" value="be">
+</property>
+<property name="env" value="dev">
+</property>
+<property name="jobId" value="">
+</property>
+<property name="tag" value="">
+</property>
+</properties>
+<failure message="mmb_booking_search_test.spec.js:5:9 [B2B][mmb]: Verify booking search with date" type="FAILURE">
+<![CDATA[  [chromium] › regression\mmb_booking_search_test.spec.js:5:9 › [B2B]-[mmb]: validation booking search with date › [B2B][mmb]: Verify booking search with date @regression @be @nl @inhouse @3rdparty 
+
+    Error: locator.waitFor: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('.button-link').first() to be visible
+
+
+      13 |             await bookingSearchPage.retrieveWithoutBookingRefTab();
+      14 |             await bookingSearchPage.searchWithDate();
+    > 15 |             await bookingSearchPage.bookingReferenceLink.first().waitFor({ timeout: 280_000 });
+         |                                                                  ^
+      16 |             await bookingSearchPage.retrieveBooking();
+      17 |             await bookingSearchPage.MmbBookingReference.waitFor({ timeout: 280_000 });
+      18 |             expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+        at D:\jyothi\playwright_automation_stng\tests\pk\regression\mmb_booking_search_test.spec.js:15:66
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\regression-mmb_booking_sea-41427-fy-booking-search-with-date-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\regression-mmb_booking_sea-41427-fy-booking-search-with-date-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\test-results\regression-mmb_booking_sea-41427-fy-booking-search-with-date-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

@@ -15,12 +15,12 @@ test.describe('Sample end to end test to create package bookings', { tag: ['@smo
         await passengerDetailsPage.agreeToAllConditions();
         const { confirmBookingPage, paymentOptionsPage } = await passengerDetailsPage.clickOnBookWithPaymentObligrationButton();
         await paymentOptionsPage.enterPaymentDetails();
-        const { bookingRefernceNumber, manageBookingPage } = await confirmBookingPage.getBookingReferenceId();
-        expect(bookingRefernceNumber).toBeTruthy();
-        await test.step(`adding booking number to test info: ${bookingRefernceNumber}`, () => {
-            testInfo.annotations.push({ type: 'bookingRefernceNumber', description: bookingRefernceNumber });
+        const { bookingReferenceNumber, manageBookingPage } = await confirmBookingPage.getBookingReferenceId();
+        expect(bookingReferenceNumber).toBeTruthy();
+        await test.step(`adding booking number to test info: ${bookingReferenceNumber}`, () => {
+            testInfo.annotations.push({ type: 'bookingReferenceNumber', description: bookingReferenceNumber });
         });
-        await manageBookingPage.validateBookingRetreivalInMmb(bookingRefernceNumber);
+        await manageBookingPage.validateBookingRetreivalInMmb(bookingReferenceNumber);
     });
     test.describe('Validate basic search functionality', () => {
         const searchParamVariants = [

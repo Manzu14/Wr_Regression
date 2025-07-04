@@ -1,4 +1,4 @@
-const { AGENT_TYPE = 'inhouse', ENV = 'stng', COUNTRY = 'be', IS_PACKAGE = true } = process.env;
+const { AGENT_TYPE = 'inhouse', ENV = 'sit', COUNTRY = 'be', IS_PACKAGE = true } = process.env;
 
 /**
  * @return {"dev"|"dev2"|"dev4"|"stng"|"sit"|"pprd"|"prod"}

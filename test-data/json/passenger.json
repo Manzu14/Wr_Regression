@@ -1,0 +1,34 @@
+{
+  "passengers": [
+    {
+      "type": "ADULT",
+      "firstName": "John",
+      "lastName": "Doe",
+      "age": 35
+    },
+    {
+      "type": "ADULT",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "age": 34
+    },
+    {
+      "type": "ADULT",
+      "firstName": "Mark",
+      "lastName": "Smith",
+      "age": 40
+    },
+    {
+      "type": "ADULT",
+      "firstName": "Lucy",
+      "lastName": "Green",
+      "age": 33
+    },
+    {
+      "type": "CHILD",
+      "firstName": "Tommy",
+      "lastName": "Doe",
+      "age": 6
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="278.456535">
+<testsuite name="mmb\nameAmand.spec.js" timestamp="2025-07-04T16:21:11.214Z" hostname="chromium" tests="1" failures="0" skipped="0" time="274.758" errors="0">
+<testcase name="[B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the Pax amendment, navigate to the review and confirmation page, and proceed to the payment options" classname="mmb\nameAmand.spec.js" time="274.758">
+<properties>
+<property name="test_key" value="B2B-3379">
+</property>
+<property name="agent" value="inhouse">
+</property>
+<property name="country" value="be">
+</property>
+<property name="env" value="sit">
+</property>
+<property name="jobId" value="">
+</property>
+<property name="tag" value="">
+</property>
+</properties>
+<system-out>
+<![CDATA[Updated first name: adultone → adultoneXYZ
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

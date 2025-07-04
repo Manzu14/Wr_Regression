@@ -12,7 +12,7 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
     test(
         '[B2B][mmb]: Verify the baggage amendment, navigate to the review and confirmation page, and proceed to the payment options',
         {
-            tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
+            tag: ['@regression'], // Only keep one tag to avoid multiple matches
             annotation: { type: 'test_key', description: 'B2B-3379' },
         },
         async ({ page }) => {

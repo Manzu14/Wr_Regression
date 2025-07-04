@@ -9,7 +9,7 @@ import { expect, test } from '../../fixures/test';
 
 test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
     test(
-        '[B2B][mmb]: Verify the special baggage amendment, navigate to the review and confirmation page, and proceed to the payment options',
+        '[B2B][mmb]: Verify the specialbaggage amendment, navigate to the review and confirmation page, and proceed to the payment options',
         {
             tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
             annotation: { type: 'test_key', description: 'B2B-3379' },
@@ -18,8 +18,8 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
             const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
             const manageBookingPage = new ManageBookingPage(page);
 
-            await manageBookingPage.enterBookingReferenceNumber('100005975040');
-            expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+            await manageBookingPage.enterBookingReferenceNumber('100005982889');
+                                                                                                                                                                 expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
 
             await manageBookingPage.clickLoginReservationButton();
 
@@ -30,22 +30,17 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
 
             const selected = await specialBaggageUpgradePage.selectSpecialBaggageOptions();
             expect(selected).toBe(true, 'No unselected baggage option was available to check');
-
-
             await specialBaggageUpgradePage.saveButton();
 
             const yourBookingComponents = new YourBookingComponents(page);
             await yourBookingComponents.summaryButton();
-
-            const reviewAndConfirm = new ReviewAndConfirm(page);
-            expect(await reviewAndConfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
-            await reviewAndConfirm.confirmChanges.click();
-
-            const paymentOptions = new PaymentOptionsPage(page);
-            await paymentOptions.clickSkipPaymentLink();
-
+            const reviewandconfirm = new ReviewAndConfirm(page);
+            await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
+            await reviewandconfirm.confirmChanges.click();
+           const paymentOptions = new PaymentOptionsPage(page);
+            await paymentOptions.clickSkipPaymentLink(); // 
             const managePaymentConfirm = new ManagePaymentConfirm(page);
-            await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60000 });
+            await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
             await expect(managePaymentConfirm.thankYouMessage).toBeVisible();
         },
     );
