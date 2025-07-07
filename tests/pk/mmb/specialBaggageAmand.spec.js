@@ -17,10 +17,8 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
         async ({ page }) => {
             const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
             const manageBookingPage = new ManageBookingPage(page);
-
-            await manageBookingPage.enterBookingReferenceNumber('100005982889');
-                                                                                                                                                                 expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
-
+            await manageBookingPage.enterBookingReferenceNumber(testData.specialBaggage);
+            await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
             await manageBookingPage.clickLoginReservationButton();
 
             const specialBaggageUpgradePage = new SpecialBaggageUpgradePage(page);
@@ -37,7 +35,7 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
             const reviewandconfirm = new ReviewAndConfirm(page);
             await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
             await reviewandconfirm.confirmChanges.click();
-           const paymentOptions = new PaymentOptionsPage(page);
+            const paymentOptions = new PaymentOptionsPage(page);
             await paymentOptions.clickSkipPaymentLink(); // 
             const managePaymentConfirm = new ManagePaymentConfirm(page);
             await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });

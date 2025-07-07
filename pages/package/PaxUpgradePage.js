@@ -8,7 +8,6 @@ export class PaxUpgradePage {
     this.firstNameLocator = page.locator(`//*[@id='FIRSTNAMEADULT1']`);
     this.surnameLocator = page.locator(`//*[@id='SURNAMEADULT1']`);
     this.saveContactDetailsButton = page.locator('//button[text()="Bewaar"]');
-    this.reviewButton = page.locator("//div[@class='UI__summaryButton']//button[1]");
   }
 
   async updatePassengerDetails() {
@@ -32,20 +31,17 @@ export class PaxUpgradePage {
     }
 
     await this.page.waitForTimeout(1000);
-    await this.page.locator(`.buttons__button.buttons__secondary.buttons__fill.UI__addButton`).click();
+    await this.page.locator('.buttons__button.buttons__secondary.buttons__fill.UI__addButton').click();
   }
 
   async saveAndProceed() {
-    await this.saveContactDetailsButton.waitFor({ timeout: 30_000 });
+    await this.saveContactDetailsButton.waitFor({ timeout: 30000 });
     await this.saveContactDetailsButton.click();
 
-    // Ensure save is completed
+    // Wait for the contact section or modal to disappear
     await this.customScrollWrapper.waitFor({ state: 'detached', timeout: 10000 });
 
-    // Wait and scroll to summary button
+    // Wait for the page to stabilize
     await this.page.waitForLoadState('networkidle');
-    await this.reviewButton.scrollIntoViewIfNeeded();
-    await this.reviewButton.waitFor({ timeout: 20000 });
-    await this.reviewButton.click();
   }
 }

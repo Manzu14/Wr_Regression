@@ -1,6 +1,6 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="278.456535">
-<testsuite name="mmb\nameAmand.spec.js" timestamp="2025-07-04T16:21:11.214Z" hostname="chromium" tests="1" failures="0" skipped="0" time="274.758" errors="0">
-<testcase name="[B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the Pax amendment, navigate to the review and confirmation page, and proceed to the payment options" classname="mmb\nameAmand.spec.js" time="274.758">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="241.88860200000002">
+<testsuite name="mmb\petsAmand.spec.js" timestamp="2025-07-07T09:31:03.674Z" hostname="chromium" tests="1" failures="1" skipped="0" time="236.689" errors="0">
+<testcase name="[B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options" classname="mmb\petsAmand.spec.js" time="236.689">
 <properties>
 <property name="test_key" value="B2B-3379">
 </property>
@@ -15,8 +15,47 @@
 <property name="tag" value="">
 </property>
 </properties>
+<failure message="petsAmand.spec.js:12:9 [B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options" type="FAILURE">
+<![CDATA[  [chromium] › mmb\petsAmand.spec.js:12:9 › [B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options @be @nl @inhouse 
+
+    Error: Timed out 90000ms waiting for expect(locator).toBeVisible()
+
+    Locator: locator('#paymentOptionsbutton__component .UI__skipPaymentsWrapper')
+    Expected: visible
+    Received: <element(s) not found>
+    Call log:
+      - expect.toBeVisible with timeout 90000ms
+      - waiting for locator('#paymentOptionsbutton__component .UI__skipPaymentsWrapper')
+        - waiting for" https://tuiretail-be-sit.tuiad.net/retail/travel/nl/your-account/managemybooking/initiateUpdate" navigation to finish...
+        - navigated to "https://tuiretail-be-sit.tuiad.net/retail/travel/nl/your-account/managemybooking/paymentoptions"
+
+
+       at ..\..\pages\package\PaymentOptionsPage.js:60
+
+      58 |
+      59 |     async clickSkipPaymentLink() {
+    > 60 |         await expect(this.skipPayment).toBeVisible({ timeout: 90_000 });
+         |                                        ^
+      61 |     
+      62 |         // Handle navigation triggered by click
+      63 |         await Promise.all([
+        at PaymentOptionsPage.clickSkipPaymentLink (D:\WR_Auto\pages\package\PaymentOptionsPage.js:60:40)
+        at D:\WR_Auto\tests\pk\mmb\petsAmand.spec.js:40:34
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\mmb-petsAmand--B2B---mmb-V-2633d-ceed-to-the-payment-options-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\mmb-petsAmand--B2B---mmb-V-2633d-ceed-to-the-payment-options-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
 <system-out>
-<![CDATA[Updated first name: adultone → adultoneXYZ
+<![CDATA[✅ Clicked a pet option checkbox (role)
+✅ Keep button clicked
+
+[[ATTACHMENT|..\test-results\mmb-petsAmand--B2B---mmb-V-2633d-ceed-to-the-payment-options-chromium\trace.zip]]
 ]]>
 </system-out>
 </testcase>
