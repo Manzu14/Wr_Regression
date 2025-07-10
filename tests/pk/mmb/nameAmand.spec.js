@@ -6,7 +6,7 @@ import { ManagePaymentConfirm } from '../../../pages/package/ManagePaymentConfir
 import { PaymentOptionsPage } from '../../../pages/package/PaymentOptionsPage';
 import { PaxUpgradePage } from '../../../pages/package/PaxUpgradePage';
 import { expect, test } from '../../fixures/test';
-import { testData } from './testData.js';
+import { testData } from '../../../test-data/testData';
 
 test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
   test(

@@ -4,4 +4,6 @@ export const testData = {
   specialBaggage: '100006005086',
   nameAmendment: '100006006282',
   petsAmendment: '100006007603',
+  specialAsst: '100006073886',
+  flightAmendment: '100006073886',
 };

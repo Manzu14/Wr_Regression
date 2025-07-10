@@ -1,16 +1,16 @@
 const { HomePage } = require('../../../pages/HomePage');
-const { SpecialBaggageUpgradePage } = require('../../../pages/package/SpecialBaggageUpgradePage');
+const { FlightUpgradePage } = require('../../../pages/package/FlightUpgradePage');
 const { YourBookingComponents } = require('../../../pages/package/components/mmb/Yourbookingcomponents');
 const { ManageBookingPage } = require('../../../pages/package/ManageBookingPage');
 const { ReviewAndConfirm } = require('../../../pages/package/ReviewAndConfirm');
-import { ManagePaymentConfirm } from '../../../pages/package/ManagePaymentConfirm';
-import { PaymentOptionsPage } from '../../../pages/package/PaymentOptionsPage';
+// import { ManagePaymentConfirm } from '../../../pages/package/ManagePaymentConfirm';
+// import { PaymentOptionsPage } from '../../../pages/package/PaymentOptionsPage';
 import { expect, test } from '../../fixures/test';
-import { testData } from './testData.js';
+import { testData } from '../../../test-data/testData.js';
 
 test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
     test(
-        '[B2B][mmb]: Verify the specialbaggage amendment, navigate to the review and confirmation page, and proceed to the payment options',
+        '[B2B][mmb]: Verify the Flight amendment, navigate to the review and confirmation page, and proceed to the payment options',
         {
             tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
             annotation: { type: 'test_key', description: 'B2B-3379' },
@@ -18,18 +18,18 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
         async ({ page }) => {
             const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
             const manageBookingPage = new ManageBookingPage(page);
-            await manageBookingPage.enterBookingReferenceNumber(testData.specialBaggage);
+            await manageBookingPage.enterBookingReferenceNumber(testData.flightAmendment);
             await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
             await manageBookingPage.clickLoginReservationButton();
 
-            const specialBaggageUpgradePage = new SpecialBaggageUpgradePage(page);
-            expect(await specialBaggageUpgradePage.specialBaggageComponent()).toBe(true, 'Baggage Component is not visible');
+            const flightUpgradePage = new FlightUpgradePage(page);
+            expect(await flightUpgradePage.flightComponent()).toBe(true, 'Flight Component is not visible');
 
-            await specialBaggageUpgradePage.upgradeSpecialBaggage();
+            await flightUpgradePage.upgradeFlight();
 
-            const selected = await specialBaggageUpgradePage.selectSpecialBaggageOptions();
-            expect(selected).toBe(true, 'No unselected baggage option was available to check');
-            await specialBaggageUpgradePage.saveButton();
+            const selected = await flightUpgradePage.selectFlightOptions();
+            expect(selected).toBe(true, 'No unselected flight option was available to check');
+            await flightUpgradePage.saveButton();
 
             const yourBookingComponents = new YourBookingComponents(page);
             await yourBookingComponents.summaryButton();

@@ -1,5 +1,4 @@
 const { HomePage } = require('../../../pages/HomePage');
-const { BaggageUpgradePage } = require('../../../pages/package/BaggageUpgradePage');
 const { YourBookingComponents } = require('../../../pages/package/components/mmb/Yourbookingcomponents');
 const { ManageBookingPage } = require('../../../pages/package/ManageBookingPage');
 const { ReviewAndConfirm } = require('../../../pages/package/ReviewAndConfirm');

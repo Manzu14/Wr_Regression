@@ -1,5 +1,3 @@
-// const pr = require('promise');
-
 // export class SeatUpgradePage {
 //     constructor(page) {
 //         this.page = page;
@@ -7,38 +5,67 @@
 
 //     async seatComponent() {
 //         await this.page.waitForLoadState('domcontentloaded');
-//         return await this.page.locator('#SeatType__component').isVisible();
+//         return await this.page.locator('#SpecialLuggage__component').isVisible();
 //     }
 
-//     async upgradeSeat() {
-//         // eslint-disable-next-line playwright/no-wait-for-selector
-//         const visible = await this.page.waitForSelector('.upgradeSection #SeatType__component button');
-//         await visible.isVisible();
-//         // eslint-disable-next-line playwright/no-wait-for-selector
-//         const seatamendbutton = await this.page.waitForSelector('.upgradeSection #SeatType__component button');
-//         await new pr(resolve => setTimeout(resolve, 10000));
-//         await seatamendbutton.click();
+//     async upgradeSpecialBaggage() {
+//         await this.page.waitForSelector('.upgradeSection #SpecialLuggage__component button');
+//         await this.page.waitForTimeout(10000); // replaced old 'pr' line
+//         const specialbaggageamendbutton = await this.page.$('.upgradeSection #SpecialLuggage__component button');
+//         await specialbaggageamendbutton.click();
 //     }
 
-//     async selectBaggageOptions() {
+//     async selectSpecialBaggageOptions() {
 //         await this.page.waitForLoadState('domcontentloaded');
-//         await new pr(resolve => setTimeout(resolve, 10000));
-//         const luggageOptions = await this.page.$$('.Luggage__luggageOptions button');
-//         if (luggageOptions.length> 0) {           
-//         const randomIndex = Math.floor(Math.random() * luggageOptions.length);
-//         console.log('randomIndex---'+ randomIndex);
-//         const selectedOption = luggageOptions[randomIndex];
-//         console.log('selectedOption---'+ selectedOption);
-//         await selectedOption.click();
-//         return await this.page.locator('//div[contains(text(),"Bagage")]').isVisible();
-//         } else {
-//             throw new Error("Language options are not available to add");
+//         await this.page.waitForTimeout(5000); // Wait for luggage UI to fully render
+
+//         const allCheckboxes = await this.page.$$('.SSRSpecialLuggage__luggageOptions input[type="checkbox"]');
+
+//         if (allCheckboxes.length === 0) {
+//             throw new Error('No luggage option checkboxes found.');
 //         }
+
+//         const unchecked = [];
+//         for (const checkbox of allCheckboxes) {
+//             if (!(await checkbox.isChecked())) {
+//                 unchecked.push(checkbox);
+//             }
+//         }
+
+//         if (unchecked.length === 0) {
+//             console.log('All checkboxes are already selected.');
+//             return false;
+//         }
+
+//         const randomIndex = Math.floor(Math.random() * unchecked.length);
+//         const selectedOption = unchecked[randomIndex];
+//         console.log('Selected unchecked checkbox index:', randomIndex);
+
+//         try {
+//             const elementHandle = await selectedOption.elementHandle();
+//             if (elementHandle) {
+//                 await elementHandle.scrollIntoViewIfNeeded();
+//                 await selectedOption.check({ force: true });
+//             } else {
+//                 throw new Error('Element handle not found for selected checkbox');
+//             }
+//         } catch (err) {
+//             console.warn('Direct check failed, using label fallback...');
+//             const label = await selectedOption.evaluateHandle(el => el.closest('label'));
+//             if (label) {
+//                 await label.scrollIntoViewIfNeeded();
+//                 await label.click();
+//             } else {
+//                 throw new Error('Checkbox label not found or clickable.');
+//             }
+//         }
+
+//         return true; // success
 //     }
 
 //     async saveButton() {
 //         await this.page.waitForLoadState('domcontentloaded');
-//         await this.page.locator('.Luggage__buttonContainer button:nth-child(2)').focus();
-//         await this.page.locator('.Luggage__buttonContainer button:nth-child(2)').click();
+//         await this.page.locator('.SSRSpecialLuggage__buttonContainer button:nth-child(2)').focus();
+//         await this.page.locator('.SSRSpecialLuggage__buttonContainer button:nth-child(2)').click();
 //     }
-// } 
+// }
