@@ -1,8 +1,8 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="118.14152500000002">
-<testsuite name="mmb\specialAssistanceAmand.spec.js" timestamp="2025-07-09T08:36:38.927Z" hostname="chromium" tests="1" failures="0" skipped="0" time="114.346" errors="0">
-<testcase name="[B2B]-[mmb]: Validation MMB flows › [B2B][mmb]: Verify the Special Assistance Amendment, navigate to the review and confirmation page, and proceed to the payment options" classname="mmb\specialAssistanceAmand.spec.js" time="114.346">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="125.63111199999999">
+<testsuite name="mmb\nonLeadPaxAmend.spec.js" timestamp="2025-09-09T14:42:12.078Z" hostname="chromium" tests="1" failures="0" skipped="0" time="122.498" errors="0">
+<testcase name="[B2B]-[mmb]: Non-Lead Passenger Amendment flows › [B2B][mmb]: Verify non-lead passenger name amendment with price validation" classname="mmb\nonLeadPaxAmend.spec.js" time="122.498">
 <properties>
-<property name="test_key" value="B2B-3379">
+<property name="test_key" value="B2B-NONLEAD-001">
 </property>
 <property name="agent" value="inhouse">
 </property>
@@ -16,8 +16,13 @@
 </property>
 </properties>
 <system-out>
-<![CDATA[✅ Checkbox label clicked
-✅ Save button clicked
+<![CDATA[Updated non-lead passenger first name: adulttwo → adulttwoyo
+Updated non-lead passenger last name: test → tester
+✏️ Updated non-lead passenger first name
+🔄 Navigated to Review and Confirm page
+✅ Non-lead name amendment price validated: €62
+💰 Review page shows non-lead pax name amendment cost: €62
+✅ Non-lead passenger name amendment price validation passed
 ]]>
 </system-out>
 </testcase>

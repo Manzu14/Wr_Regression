@@ -1,38 +1,39 @@
-export class PaxUpgradePage {
+export class NonLeadPaxUpgradePage {
   constructor(page) {
     this.page = page;
     this.passengerListWrapper = page.locator('//*[@id="PassengerList__component"]');
     this.customScrollWrapper = page.locator('#customScrollWraper');
     this.updatePassengerDetailsLink = this.passengerListWrapper.locator(`//span[text()='Wijzig contactgegevens']`);
     this.editContactdetailsWrapper = page.locator('.components__headerContanerWrapper');
-    this.firstNameLocator = page.locator(`//*[@id='FIRSTNAMEADULT1']`);
-    this.surnameLocator = page.locator(`//*[@id='SURNAMEADULT1']`);
+    this.firstNameLocator = page.locator(`//*[@id='FIRSTNAMEADULT2']`);
+    this.surnameLocator = page.locator(`//*[@id='SURNAMEADULT2']`);
     this.saveContactDetailsButton = page.locator('button.UI__addButton');
-
   }
 
-  async updatePassengerDetails() {
+  async updateNonLeadPassengerDetails() {
     await this.page.waitForLoadState('domcontentloaded');
-    await this.updatePassengerDetailsLink.click();
+    
+    // Click on "Wijzig passagiersgegevens" link for non-lead passenger
+    await this.page.waitForTimeout(2000);
+    const passengerDetailsLink = this.page.locator(`//span[text()='Wijzig passagiersgegevens']`);
+    await passengerDetailsLink.click();
+    
     await this.firstNameLocator.waitFor({ state: 'visible', timeout: 10000 });
     
     const existingFirst = await this.firstNameLocator.inputValue();
     const existingLast = await this.surnameLocator.inputValue();
 
-    const modifyFirstName = true;
-
-    if (modifyFirstName) {
-      if (!existingFirst.endsWith('jo')) {
-        const updatedFirst = existingFirst + 'jo';
-        await this.firstNameLocator.fill(updatedFirst);
-        console.log(`Updated first name: ${existingFirst} → ${updatedFirst}`);
-      }
-    } else {
-      if (!existingLast.endsWith('joy')) {
-        const updatedLast = existingLast + 'joy';
-        await this.surnameLocator.fill(updatedLast);
-        console.log(`Updated last name: ${existingLast} → ${updatedLast}`);
-      }
+    // Non-lead passenger can change both first and last name
+    if (!existingFirst.endsWith('yo')) {
+      const updatedFirst = existingFirst + 'yo';
+      await this.firstNameLocator.fill(updatedFirst);
+      console.log(`Updated non-lead passenger first name: ${existingFirst} → ${updatedFirst}`);
+    }
+    
+    if (!existingLast.endsWith('er')) {
+      const updatedLast = existingLast + 'er';
+      await this.surnameLocator.fill(updatedLast);
+      console.log(`Updated non-lead passenger last name: ${existingLast} → ${updatedLast}`);
     }
 
     await this.page.waitForTimeout(1000);
@@ -43,10 +44,7 @@ export class PaxUpgradePage {
     await this.saveContactDetailsButton.waitFor({ timeout: 30000 });
     await this.saveContactDetailsButton.click();
 
-    // Wait for the contact section or modal to disappear
     await this.customScrollWrapper.waitFor({ state: 'detached', timeout: 10000 });
-
-    // Wait for the page to stabilize
     await this.page.waitForLoadState('networkidle');
   }
 

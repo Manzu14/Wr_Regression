@@ -1,6 +1,7 @@
 {
     "name": "core-pw",
     "version": "1.0.0",
+    
     "description": "Initial Playwright Project using Javascript",
     "main": "index.js",
     "scripts": {
@@ -19,6 +20,7 @@
         "eslint:fix": "eslint --config eslint.config.mjs --fix",
         "format": "prettier --config .prettierrc.js --ignore-path .gitignore --write .",
         "teams-report": "npx testbeats@latest publish -c utils/reporters/teams.js",
+        
         "xray-report": "node utils/reporters/xray.js"
     },
     "keywords": [],

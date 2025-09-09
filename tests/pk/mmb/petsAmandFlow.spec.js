@@ -1,5 +1,5 @@
 import { HomePage } from '../../../pages/HomePage.js';
-import { FlightUpgradePage } from '../../../pages/package/FlightUpgradePage.js';
+import { PetsUpgradePage } from '../../../pages/package/PetsUpgradePage.js';
 import { YourBookingComponents } from '../../../pages/package/components/mmb/Yourbookingcomponents.js';
 import { ManageBookingPage } from '../../../pages/package/ManageBookingPage.js';
 import { ReviewAndConfirm } from '../../../pages/package/ReviewAndConfirm.js';
@@ -10,32 +10,32 @@ import { testData } from '../../../test-data/testData.js';
 
 test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
     test(
-        '[B2B][mmb]: Verify the Flight amendment, navigate to the review and confirmation page, and proceed to the payment options',
+        '[B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options',
         {
-            tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
+            tag: ['@be', '@nl', '@inhouse'],
             annotation: { type: 'test_key', description: 'B2B-3379' },
         },
         async ({ page }) => {
             const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
             const manageBookingPage = new ManageBookingPage(page);
-            await manageBookingPage.enterBookingReferenceNumber(testData.flightAmendment);
+            await manageBookingPage.enterBookingReferenceNumber(testData.petsAmendment);
             await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
             await manageBookingPage.clickLoginReservationButton();
 
-            const flightUpgradePage = new FlightUpgradePage(page);
-            await expect(await flightUpgradePage.flightComponent()).toBe(true, 'Flight Component is not visible');
+            const petsUpgradePage = new PetsUpgradePage(page);
+            await expect(await petsUpgradePage.petsComponent()).toBe(true, 'Pets Component is not visible');
 
-            await flightUpgradePage.upgradeFlight();
+            await petsUpgradePage.upgradePets();
 
-            const selectedFlight = await flightUpgradePage.selectFlightOptions();
-            await expect(selectedFlight).toBe(true, 'No flight upgrade option was available to select');
-            console.log(`✈️ Selected flight upgrade: ${flightUpgradePage.selectedFlight.name} - €${flightUpgradePage.selectedFlight.price}`);
+            const selectedPet = await petsUpgradePage.selectPetsOptions();
+            await expect(selectedPet).toBe(true, 'No pets option was available to select');
+            console.log(`🐕 Selected pet option: ${petsUpgradePage.selectedPet.name} - €${petsUpgradePage.selectedPet.price}`);
 
-            await flightUpgradePage.saveButton();
-            const actualPrice = await flightUpgradePage.validateFlightPrices();
+            await petsUpgradePage.saveButton();
+            const actualPrice = await petsUpgradePage.validatePetsPrices();
             console.log(`💰 Summary shows total: €${actualPrice}`);
             
-            expect(actualPrice).toBe(flightUpgradePage.selectedFlight.price, `Summary price (€${actualPrice}) doesn't match selected price (€${flightUpgradePage.selectedFlight.price})`);
+            expect(actualPrice).toBe(petsUpgradePage.selectedPet.price, `Summary price (€${actualPrice}) doesn't match selected price (€${petsUpgradePage.selectedPet.price})`);
 
             const yourBookingComponents = new YourBookingComponents(page);
             await yourBookingComponents.summaryButton();
@@ -44,13 +44,15 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
             await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
             console.log('🔄 Navigated to Review and Confirm page');
 
-            const reviewPrice = await reviewandconfirm.validateFlightPrice();
-            console.log(`💰 Review page shows: €${reviewPrice} (${flightUpgradePage.selectedFlight.name} for 2 pax)`);
+            const reviewPrice = await reviewandconfirm.validatePetsPrice();
+            console.log(`💰 Review page shows: €${reviewPrice} (${petsUpgradePage.selectedPet.name} for 1 pax)`);
             
             expect(reviewPrice).toBe(actualPrice, `Review price (€${reviewPrice}) doesn't match summary price (€${actualPrice})`);
 
             await reviewandconfirm.confirmChanges.click();
-            /*const paymentOptions = new PaymentOptionsPage(page);
+
+
+           /* const paymentOptions = new PaymentOptionsPage(page);
             await paymentOptions.clickSkipPaymentLink(); // 
             const managePaymentConfirm = new ManagePaymentConfirm(page);
             await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });

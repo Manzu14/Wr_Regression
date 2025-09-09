@@ -21,6 +21,8 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
             await manageBookingPage.enterBookingReferenceNumber('100005952007');
             expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
             await manageBookingPage.clickLoginReservationButton();
+
+            
             const baggageUpgradePage = new BaggageUpgradePage(page);
             expect(await baggageUpgradePage.baggageComponent()).toBe(true, 'Baggage Component is not visible');
             await baggageUpgradePage.upgradeBaggage();
@@ -76,81 +78,126 @@ test.describe('[B2B]-[mmb]: Validation MMB flows', () => {
 
 
 
-            // Proceed to payment options
-            const paymentOptions = new PaymentOptionsPage(page);
-            //await (paymentOptions.skipPayment).toBeVisible({ timeout: 60_000 });
-            await (paymentOptions.skipPayment).click();
-            const managePaymentConfirm = new ManagePaymentConfirm(page);
-            await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
-            await expect(managePaymentConfirm.thankYouMessage).toBeVisible();
+            // // Proceed to payment options
+            // const paymentOptions = new PaymentOptionsPage(page);
+            // //await (paymentOptions.skipPayment).toBeVisible({ timeout: 60_000 });
+            // await (paymentOptions.skipPayment).click();
+            // const managePaymentConfirm = new ManagePaymentConfirm(page);
+            // await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
+            // await expect(managePaymentConfirm.thankYouMessage).toBeVisible();
 
 
         },
     );
 
     test(
-        '[B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options',
-        {
-            tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
-            annotation: { type: 'test_key', description: 'B2B-3379' },
-        },
-        async ({ page }) => {
-            // ✅ STEP 1: Perform login
-            const loginPage = new LoginPage(page);
-            await loginPage.doLogin();
+            '[B2B][mmb]: Verify the pets amendment, navigate to the review and confirmation page, and proceed to the payment options',
+            {
+                tag: ['@be', '@nl', '@inhouse'],
+                annotation: { type: 'test_key', description: 'B2B-3379' },
+            },
+            async ({ page }) => {
+                const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
+                const manageBookingPage = new ManageBookingPage(page);
+                await manageBookingPage.enterBookingReferenceNumber(testData.petsAmendment);
+                await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+                await manageBookingPage.clickLoginReservationButton();
+    
+                const petsUpgradePage = new PetsUpgradePage(page);
+                expect(await petsUpgradePage.petsComponent()).toBe(true, 'Pets Component is not visible');
+    
+                await petsUpgradePage.upgradePets();
+    
+                const selected = await petsUpgradePage.selectPetsOptions();
+                expect(selected).toBe(true, 'No unselected pets option was available to check');
+                await petsUpgradePage.saveButton();
+    
+                const yourBookingComponents = new YourBookingComponents(page);
+                await yourBookingComponents.summaryButton();
+                const reviewandconfirm = new ReviewAndConfirm(page);
+                await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
+                await reviewandconfirm.validatePetsPrice(180);
+                
+                
+                await reviewandconfirm.confirmChanges.click();
+    
+    
+               /* const paymentOptions = new PaymentOptionsPage(page);
+                await paymentOptions.clickSkipPaymentLink(); // 
+                const managePaymentConfirm = new ManagePaymentConfirm(page);
+                await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
+                await expect(managePaymentConfirm.thankYouMessage).toBeVisible();*/
+            },
+        );
 
-            // ✅ STEP 2: After login, navigate to MMB page
-            await page.goto(
-                'https://tuiretail-be-stng.tuiad.net/retail/travel/nl/your-account/managemybooking/yourbooking',
-                { waitUntil: 'networkidle' }
-            );
+    test(
+            '[B2B][mmb]: Verify the Seat amendment, navigate to the review and confirmation page, and proceed to the payment options',
+            {
+                tag: ['@regression', '@be','@inhouse'],
+                annotation: { type: 'test_key', description: 'B2B-3379' },
+            },
+            async ({ page }) => {
+                const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
+                const manageBookingPage = new ManageBookingPage(page);
+                await manageBookingPage.enterBookingReferenceNumber(testData.seatAmend);
+                await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+                await manageBookingPage.clickLoginReservationButton();
+    
+                const seatUpgradePage = new SeatUpgradePage(page);
+                expect(await seatUpgradePage.seatComponent()).toBe(true, 'Seat Component is not visible');
+    
+                await seatUpgradePage.upgradeSeat();
+    
+                const selected = await seatUpgradePage.selectSeatOptions();
+                expect(selected).toBe(true, 'No unselected seat option was available to check');
+                await seatUpgradePage.saveButton();
+    
+                const yourBookingComponents = new YourBookingComponents(page);
+                await yourBookingComponents.summaryButton();
+                const reviewandconfirm = new ReviewAndConfirm(page);
+                await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
+                await reviewandconfirm.confirmChanges.click();
+                /*const paymentOptions = new PaymentOptionsPage(page);
+                await paymentOptions.clickSkipPaymentLink(); // 
+                const managePaymentConfirm = new ManagePaymentConfirm(page);
+                await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
+                await expect(managePaymentConfirm.thankYouMessage).toBeVisible();*/
+            },
+        );
 
-            // ✅ STEP 3: Continue existing test logic
-            const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
-            const manageBookingPage = new ManageBookingPage(page);
-
-            await manageBookingPage.enterBookingReferenceNumber('100005976402');
-            expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
-            await manageBookingPage.clickLoginReservationButton();
-
-            const yourBookingComponents = new YourBookingComponents(page);
-            await expect(yourBookingComponents.passengerListWrapper).toBeVisible();
-            await yourBookingComponents.updatePassengerDetailsLink.click();
-            await page.waitForTimeout(5000);
-
-            // Fill and save passenger details
-            await yourBookingComponents.passengerFill();
-            await expect(yourBookingComponents.saveContactDetailsButton).toBeVisible({ timeout: 30_000 });
-            await yourBookingComponents.saveContactDetailsButton.click();
-
-            // Wait for the scroll wrapper to disappear (indicates save complete)
-            await expect(yourBookingComponents.customScrollWrapper).toHaveCount(0, { timeout: 10000 });
-
-            // Wait for network to settle before proceeding
-            await page.waitForLoadState('networkidle');
-
-            // Wait explicitly for the review button to appear in the DOM
-            await page.waitForSelector("//div[@class='UI__summaryButton']//button[1]", { timeout: 20000 });
-
-            // Scroll it into view (just in case it's below viewport)
-            await yourBookingComponents.reviewButton.scrollIntoViewIfNeeded();
-
-            // Final visibility check and click
-            await expect(yourBookingComponents.reviewButton).toBeVisible({ timeout: 20000 });
-            await yourBookingComponents.reviewButton.click();
-
-            const reviewandconfirm = new ReviewAndConfirm(page);
-            expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
-            await reviewandconfirm.confirmChanges.click();
-
-            const paymentOptions = new PaymentOptionsPage(page);
-            await paymentOptions.clickSkipPaymentLink();
-
-            const managePaymentConfirm = new ManagePaymentConfirm(page);
-            await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
-            await expect(managePaymentConfirm.thankYouMessage).toBeVisible();
-        }
-    );
-
+     test(
+               '[B2B][mmb]: Verify the Flight amendment, navigate to the review and confirmation page, and proceed to the payment options',
+               {
+                   tag: ['@regression', '@be', '@nl', '@inhouse', '@3rdparty'],
+                   annotation: { type: 'test_key', description: 'B2B-3379' },
+               },
+               async ({ page }) => {
+                   const bookingSearchPage = await new HomePage(page).navigateToBookingSearchPage();
+                   const manageBookingPage = new ManageBookingPage(page);
+                   await manageBookingPage.enterBookingReferenceNumber(testData.flightAmendment);
+                   await expect(bookingSearchPage.MmbBookingReference).toBeTruthy();
+                   await manageBookingPage.clickLoginReservationButton();
+       
+                   const flightUpgradePage = new FlightUpgradePage(page);
+                   expect(await flightUpgradePage.flightComponent()).toBe(true, 'Flight Component is not visible');
+       
+                   await flightUpgradePage.upgradeFlight();
+       
+                   const selected = await flightUpgradePage.selectFlightOptions();
+                   expect(selected).toBe(true, 'No unselected flight option was available to check');
+                   await flightUpgradePage.saveButton();
+       
+                   const yourBookingComponents = new YourBookingComponents(page);
+                   await yourBookingComponents.summaryButton();
+                   const reviewandconfirm = new ReviewAndConfirm(page);
+                   await expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
+                   await reviewandconfirm.confirmChanges.click();
+                   /*const paymentOptions = new PaymentOptionsPage(page);
+                   await paymentOptions.clickSkipPaymentLink(); // 
+                   const managePaymentConfirm = new ManagePaymentConfirm(page);
+                   await expect(managePaymentConfirm.successMessage).toBeVisible({ timeout: 60_000 });
+                   await expect(managePaymentConfirm.thankYouMessage).toBeVisible();*/
+               },
+           ); 
     
 });

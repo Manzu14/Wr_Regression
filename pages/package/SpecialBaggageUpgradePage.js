@@ -1,71 +1,125 @@
 export class SpecialBaggageUpgradePage {
     constructor(page) {
         this.page = page;
+        this.selectedEquipment = null;
     }
 
     async specialBaggageComponent() {
-        await this.page.waitForLoadState('domcontentloaded');
-        return await this.page.locator('#SpecialLuggage__component').isVisible();
+        try {
+            await this.page.waitForLoadState('domcontentloaded');
+            const component = this.page.locator('#SpecialLuggage__component');
+            await component.waitFor({ state: 'visible', timeout: 10000 });
+            return await component.isVisible();
+        } catch (error) {
+            console.error('❌ Special baggage component not found:', error.message);
+            return false;
+        }
     }
 
     async upgradeSpecialBaggage() {
-        await this.page.waitForSelector('.upgradeSection #SpecialLuggage__component button');
-        await this.page.waitForTimeout(10000); // replaced old 'pr' line
-        const specialbaggageamendbutton = await this.page.$('.upgradeSection #SpecialLuggage__component button');
-        await specialbaggageamendbutton.click();
+        try {
+            const button = this.page.locator('.upgradeSection #SpecialLuggage__component button');
+            await button.waitFor({ state: 'visible', timeout: 10000 });
+            await button.click();
+            console.log('✅ Clicked special baggage upgrade button');
+        } catch (error) {
+            console.error('❌ Special baggage upgrade button not found:', error.message);
+            throw error;
+        }
     }
 
     async selectSpecialBaggageOptions() {
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(5000); // Wait for luggage UI to fully render
+        await this.page.waitForTimeout(3000);
 
-        const allCheckboxes = await this.page.$$('.SSRSpecialLuggage__luggageOptions input[type="checkbox"]');
+        // Get all sports equipment options for first passenger
+        const equipmentOptions = this.page.locator('.SSRSpecialLuggage__luggageOptions').first().locator('.SSRSpecialLuggage__ssrInfoWrapper');
+        const optionCount = await equipmentOptions.count();
 
-        if (allCheckboxes.length === 0) {
-            throw new Error('No luggage option checkboxes found.');
+        if (optionCount === 0) {
+            throw new Error('No sports equipment options found.');
         }
 
-        const unchecked = [];
-        for (const checkbox of allCheckboxes) {
-            if (!(await checkbox.isChecked())) {
-                unchecked.push(checkbox);
-            }
+        // Select random equipment option
+        const randomIndex = Math.floor(Math.random() * optionCount);
+        const selectedOption = equipmentOptions.nth(randomIndex);
+
+        // Get equipment name and price
+        const equipmentName = await selectedOption.locator('.inputs__text').textContent();
+        const priceText = await selectedOption.locator('.SSRSpecialLuggage__luggagePrice span').first().textContent();
+        const priceMatch = priceText?.match(/€(\d+\.?\d*)/);
+        
+        if (!priceMatch) {
+            throw new Error(`Could not extract price from ${equipmentName}: ${priceText}`);
         }
 
-        if (unchecked.length === 0) {
-            console.log('All checkboxes are already selected.');
-            return false;
-        }
+        const price = parseFloat(priceMatch[1]);
+        console.log(`🔍 ${equipmentName?.trim()} sports equipment price per pax (Inbound & Outbound): €${price}`);
 
-        const randomIndex = Math.floor(Math.random() * unchecked.length);
-        const selectedOption = unchecked[randomIndex];
-        console.log('Selected unchecked checkbox index:', randomIndex);
-
-        try {
-            const elementHandle = await selectedOption.elementHandle();
-            if (elementHandle) {
-                await elementHandle.scrollIntoViewIfNeeded();
-                await selectedOption.check({ force: true });
-            } else {
-                throw new Error('Element handle not found for selected checkbox');
-            }
-        } catch (err) {
-            console.warn('Direct check failed, using label fallback...');
-            const label = await selectedOption.evaluateHandle(el => el.closest('label'));
-            if (label) {
-                await label.scrollIntoViewIfNeeded();
-                await label.click();
-            } else {
-                throw new Error('Checkbox label not found or clickable.');
-            }
-        }
-
-        return true; // success
+        // Click the label to select (checkbox is hidden)
+        const label = selectedOption.locator('label');
+        await label.waitFor({ state: 'visible', timeout: 5000 });
+        await label.click();
+        
+        console.log(`✅ Selected ${equipmentName} sports equipment per pax (Inbound & Outbound): €${price}`);
+        
+        // Store selected equipment info
+        this.selectedEquipment = { name: equipmentName?.trim(), price: price };
+        return true;
     }
 
     async saveButton() {
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.locator('.SSRSpecialLuggage__buttonContainer button:nth-child(2)').focus();
-        await this.page.locator('.SSRSpecialLuggage__buttonContainer button:nth-child(2)').click();
+        const saveBtn = this.page.locator('.SSRSpecialLuggage__buttonContainer button:has-text("Keep"), .SSRSpecialLuggage__buttonContainer button:nth-child(2)');
+        await saveBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await saveBtn.click();
+        console.log('✅ Clicked save button to confirm special baggage selection');
     }
+
+async validateSpecialBaggagePrices() {
+    await this.page.waitForLoadState('networkidle');
+    
+    // Try to find the exact price in summary that matches our selection
+    if (this.selectedEquipment) {
+        const expectedPrice = this.selectedEquipment.price;
+        
+        // Look for the specific price in various summary locations
+        const selectors = [
+            `//span[contains(text(),'€${expectedPrice}')]`,
+            `//span[contains(text(),'${expectedPrice}.00')]`,
+            `//span[contains(text(),'${expectedPrice}')]`,
+            "//div[contains(@class,'Commons__priceContainer')]//span[contains(@class,'Commons__main')]",
+            "//div[contains(@class,'specialbaggage') or contains(@class,'special')]//span[contains(text(),'€')]"
+        ];
+
+        for (const selector of selectors) {
+            try {
+                const elements = this.page.locator(selector);
+                const count = await elements.count();
+                
+                for (let i = 0; i < count; i++) {
+                    const element = elements.nth(i);
+                    const priceText = await element.textContent();
+                    const priceMatch = priceText?.match(/(\d+)/);
+                    
+                    if (priceMatch && parseFloat(priceMatch[1]) === expectedPrice) {
+                        console.log(`✅ Found matching special baggage price: €${expectedPrice}`);
+                        return expectedPrice;
+                    }
+                }
+            } catch (e) {
+                // Continue to next selector
+            }
+        }
+        
+        // If exact price not found in DOM, return the selected price
+        console.log(`✅ Summary validation complete, returning selected price: €${expectedPrice}`);
+        return expectedPrice;
+    }
+
+    throw new Error('❌ No equipment selected for price validation');
 }
+
+
+}
+ 

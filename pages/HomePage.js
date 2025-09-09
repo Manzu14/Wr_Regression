@@ -22,7 +22,8 @@ export class HomePage {
     }
 
     async navigateToBookingSearchPage() {
-        await this.manageReservation.click();
+        await this.manageReservation.first().click();
         return new BookingSearchPage(this.page);
     }
 }
+ 

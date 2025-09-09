@@ -1,5 +1,4 @@
-import { expect } from '../../tests/fixures/test';
-
+import { expect } from '@playwright/test';
 export class CustomerServiceCenterModule {
     /** @param {import('playwright').Page} page */
     constructor(page) {

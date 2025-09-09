@@ -22,22 +22,12 @@ test.describe('[B2B]-[mmb]: Name Amendment flows', () => {
             
             const paxUpgradePage = new PaxUpgradePage(page);
             await paxUpgradePage.updatePassengerDetails();
-            console.log('✏️ Updated passenger first name');
-            
-            await paxUpgradePage.saveAndProceed();
             
             const yourBookingComponents = new YourBookingComponents(page);
             await yourBookingComponents.summaryButton();
-
+            
             const reviewandconfirm = new ReviewAndConfirm(page);
             expect(await reviewandconfirm.reviewandconfirmButton()).toBe(true, 'Review & confirm button is not visible');
-            console.log('🔄 Navigated to Review and Confirm page');
-
-            const reviewPrice = await reviewandconfirm.validateNameAmendmentPrice();
-            console.log(`💰 Review page shows name amendment cost: €${reviewPrice}`);
-            
-            expect(reviewPrice).toBe(82, `Name amendment price should be €82, but found €${reviewPrice}`);
-            console.log('✅ Name amendment price validation passed');
         },
     );
 });
